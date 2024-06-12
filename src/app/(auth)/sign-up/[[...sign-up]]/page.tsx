@@ -1,4 +1,30 @@
-const SignUpPage = () => {
-  return <div>Sign Up</div>
+import { Loader2 } from 'lucide-react'
+import { SignUp, ClerkLoaded, ClerkLoading } from '@clerk/nextjs'
+
+import Logo from '@/components/logo'
+
+export default function Page() {
+  return (
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+      <div className="h-full lg:flex flex-col items-center justify-center px-4">
+        <div className="text-center space-y-4 pt-16">
+          <h1 className="font-bold text-3xl text-slate-900">Sign Up</h1>
+          <p className="text-base text-slate-600">
+            Create an accout to get to your dashboard!
+          </p>
+        </div>
+        <div className="flex items-center justify-center mt-8">
+          <ClerkLoaded>
+            <SignUp />
+          </ClerkLoaded>
+          <ClerkLoading>
+            <Loader2 size={30} className="animate-spin text-muted-foreground" />
+          </ClerkLoading>
+        </div>
+      </div>
+      <div className="h-full bg-blue-600 hidden lg:flex items-center justify-center">
+        <Logo height={128} width={128} />
+      </div>
+    </div>
+  )
 }
-export default SignUpPage
