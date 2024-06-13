@@ -1,4 +1,5 @@
 import { pgTable, uniqueIndex, varchar } from 'drizzle-orm/pg-core'
+import { createInsertSchema } from 'drizzle-zod'
 
 export const accountsTable = pgTable(
   'accounts',
@@ -18,4 +19,4 @@ export const accountsTable = pgTable(
 )
 
 export type InsertAccount = typeof accountsTable.$inferInsert
-export type SelectAccount = typeof accountsTable.$inferSelect
+export const InsertAccountSchema = createInsertSchema(accountsTable)
