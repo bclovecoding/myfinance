@@ -7,10 +7,23 @@ import {
 } from '@/components/ui/sheet'
 
 import { FeatureName } from './constant'
-import { useNewData } from './useHooks'
+import { useNewData, useCreateData } from './useHooks'
+import DataForm, { type FormValues } from './data-form'
 
 export default function NewDataSheet() {
+  const mutaion = useCreateData()
   const { isOpen, onClose } = useNewData()
+
+  const onSubmit = (values: FormValues) => {
+    mutaion.mutate(values, {
+      onSuccess: () => {
+        onClose()
+      },
+      onError: () => {
+        onClose()
+      },
+    })
+  }
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent>
@@ -20,6 +33,13 @@ export default function NewDataSheet() {
             Creat new {FeatureName} to track your transactions.
           </SheetDescription>
         </SheetHeader>
+        <DataForm
+          onSubmit={onSubmit}
+          disabled={mutaion.isPending}
+          defaultValues={{
+            name: '',
+          }}
+        />
       </SheetContent>
     </Sheet>
   )
