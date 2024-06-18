@@ -1,4 +1,13 @@
-import { pgTable, uniqueIndex, varchar } from 'drizzle-orm/pg-core'
+import { z } from 'zod'
+import {
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+  varchar,
+} from 'drizzle-orm/pg-core'
+import { relations } from 'drizzle-orm'
 import { createInsertSchema } from 'drizzle-zod'
 
 export const accountsTable = pgTable(
@@ -17,8 +26,9 @@ export const accountsTable = pgTable(
     }
   }
 )
-
-export type InsertAccount = typeof accountsTable.$inferInsert
+export const accountsRelations = relations(accountsTable, ({ many }) => ({
+  transactions: many(transactionsTable),
+}))
 export const InsertAccountSchema = createInsertSchema(accountsTable)
 
 export const categoriesTable = pgTable(
@@ -37,6 +47,42 @@ export const categoriesTable = pgTable(
     }
   }
 )
-
-export type InsertCategory = typeof categoriesTable.$inferInsert
+export const categoriesRelations = relations(categoriesTable, ({ many }) => ({
+  transactions: many(transactionsTable),
+}))
 export const InsertCategorySchema = createInsertSchema(categoriesTable)
+
+export const transactionsTable = pgTable('transactions', {
+  id: varchar('id', { length: 60 }).primaryKey(),
+  amount: integer('amount').notNull(),
+  payee: text('payee').notNull(),
+  date: timestamp('date', { mode: 'date' }).notNull(),
+  notes: text('notes'),
+  accountId: varchar('account_id', { length: 60 })
+    .references(() => accountsTable.id, {
+      onDelete: 'cascade',
+    })
+    .notNull(),
+  categoryId: varchar('category_id', { length: 60 }).references(
+    () => categoriesTable.id,
+    {
+      onDelete: 'set null',
+    }
+  ),
+})
+export const transactionsRelations = relations(
+  transactionsTable,
+  ({ one }) => ({
+    account: one(accountsTable, {
+      fields: [transactionsTable.accountId],
+      references: [accountsTable.id],
+    }),
+    category: one(categoriesTable, {
+      fields: [transactionsTable.categoryId],
+      references: [categoriesTable.id],
+    }),
+  })
+)
+export const InsertTransactionSchema = createInsertSchema(transactionsTable, {
+  date: z.coerce.date(),
+})

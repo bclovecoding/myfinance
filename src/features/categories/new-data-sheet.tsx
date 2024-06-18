@@ -27,7 +27,7 @@ export default function NewDataSheet() {
         <SheetHeader>
           <SheetTitle>New {OneData}</SheetTitle>
           <SheetDescription>
-            Creat new {OneData} to catelog your transactions.
+            Creat new {OneData} to organize your transactions.
           </SheetDescription>
         </SheetHeader>
         <DataForm
