@@ -1,11 +1,12 @@
 import { Hono } from 'hono'
 import { createMiddleware } from 'hono/factory'
 import { handle } from 'hono/vercel'
-import { clerkMiddleware, getAuth } from '@hono/clerk-auth'
+import { clerkMiddleware } from '@hono/clerk-auth'
 
 export const runtime = 'edge'
 
 import accounts from './accounts'
+import categories from './categories'
 
 export const userIdMiddleware = createMiddleware(async (c, next) => {
   const ca = c.get('clerkAuth')
@@ -22,13 +23,15 @@ export const userIdMiddleware = createMiddleware(async (c, next) => {
 })
 
 const app = new Hono().basePath('/api')
+
 app.use('*', clerkMiddleware(), userIdMiddleware)
 
-export const routers = app.route('/accounts', accounts)
+export const routers = app
+  .route('/accounts', accounts)
+  .route('categories', categories)
 
 export const GET = handle(app)
 export const POST = handle(app)
-export const PUT = handle(app)
 export const PATCH = handle(app)
 export const DELETE = handle(app)
 

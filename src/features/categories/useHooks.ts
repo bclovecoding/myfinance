@@ -55,8 +55,10 @@ export const useOpenData = create<OpenDataState>((set) => ({
   onOpen: (id: string) => set({ id, isOpen: true }),
 }))
 
-type CreateRespType = InferResponseType<typeof client.api.accounts.$post>
-type CreateReqType = InferRequestType<typeof client.api.accounts.$post>['json']
+type CreateRespType = InferResponseType<typeof client.api.categories.$post>
+type CreateReqType = InferRequestType<
+  typeof client.api.categories.$post
+>['json']
 
 export const useCreateData = () => {
   const queryClient = useQueryClient()
@@ -77,10 +79,10 @@ export const useCreateData = () => {
 }
 
 type BulkDeleteRespType = InferResponseType<
-  (typeof client.api.accounts)['bulk-delete']['$post']
+  (typeof client.api.categories)['bulk-delete']['$post']
 >
 type BulkDeleteReqType = InferRequestType<
-  (typeof client.api.accounts)['bulk-delete']['$post']
+  (typeof client.api.categories)['bulk-delete']['$post']
 >['json']
 
 export const useBulkDelete = () => {
@@ -104,10 +106,10 @@ export const useBulkDelete = () => {
 }
 
 type EditRespType = InferResponseType<
-  (typeof client.api.accounts)[':id']['$patch']
+  (typeof client.api.categories)[':id']['$patch']
 >
 type EditReqType = InferRequestType<
-  (typeof client.api.accounts)[':id']['$patch']
+  (typeof client.api.categories)[':id']['$patch']
 >['json']
 
 export const useEditData = (id?: string) => {
@@ -134,7 +136,7 @@ export const useEditData = (id?: string) => {
 }
 
 type DeleteRespType = InferResponseType<
-  (typeof client.api.accounts)[':id']['$delete']
+  (typeof client.api.categories)[':id']['$delete']
 >
 
 export const useDeleteData = (id?: string) => {

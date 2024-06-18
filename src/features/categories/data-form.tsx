@@ -12,11 +12,11 @@ import {
   FormItem,
   FormLabel,
 } from '@/components/ui/form'
-import { InsertAccountSchema } from '@/db/schema'
+import { InsertCategorySchema } from '@/db/schema'
 
 import { OneData } from './constant'
 
-const formSchema = InsertAccountSchema.pick({
+const formSchema = InsertCategorySchema.pick({
   name: true,
 })
 
@@ -65,7 +65,7 @@ export default function DataForm({
               <FormControl>
                 <Input
                   disabled={disabled}
-                  placeholder="e.g. Cash, Bank, Credit Card"
+                  placeholder="e.g. Salary Food, Pet, Rent"
                   {...field}
                 />
               </FormControl>

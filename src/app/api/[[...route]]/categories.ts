@@ -6,8 +6,8 @@ import { eq, inArray, and } from 'drizzle-orm'
 import { createId } from '@paralleldrive/cuid2'
 
 import {
-  InsertAccountSchema as InsertDataSchema,
-  accountsTable as dataTable,
+  InsertCategorySchema as InsertDataSchema,
+  categoriesTable as dataTable,
 } from '@/db/schema'
 
 import { idParamValidator } from './utility'

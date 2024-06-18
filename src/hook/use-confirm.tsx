@@ -17,7 +17,10 @@ type ReturnType = [
   confirm: () => Promise<unknown>
 ]
 
-const useConfirm = (title: string, message: string): ReturnType => {
+const useConfirm = (
+  title = 'Confirm',
+  message = 'Are you sure to do this?'
+): ReturnType => {
   const [promise, setPromise] = useState<{
     resolve: (value: boolean) => void
   } | null>(null)

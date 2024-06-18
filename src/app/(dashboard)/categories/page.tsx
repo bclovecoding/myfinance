@@ -10,7 +10,7 @@ import {
   useNewData,
   useGetDataList,
   useBulkDelete,
-} from '@/features/accounts/useHooks'
+} from '@/features/categories/useHooks'
 
 export default function Page() {
   const newData = useNewData()
@@ -18,13 +18,13 @@ export default function Page() {
   const bulkDeletemutaion = useBulkDelete()
 
   if (listQuery.isLoading) {
-    return <PageSkeleton title="Accounts" />
+    return <PageSkeleton title="Categories" />
   }
 
   const isDisabled = bulkDeletemutaion.isPending
 
   return (
-    <PageWrapper title="Accounts" onAddNew={newData.onOpen}>
+    <PageWrapper title="Categories" onAddNew={newData.onOpen}>
       <DataTable
         columns={columns}
         data={listQuery.data || []}

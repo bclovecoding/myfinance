@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import useConfirm from '@/hook/use-confirm'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -42,6 +43,10 @@ export default function DataTable<TData, TValue>({
   onDelete,
   disabled,
 }: DataTableProps<TData, TValue>) {
+  const [ConfirmDlg, confirm] = useConfirm(
+    'Confirm',
+    'Are you sure to delete those records?'
+  )
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [rowSelection, setRowSelection] = useState({})
@@ -84,8 +89,12 @@ export default function DataTable<TData, TValue>({
             size="sm"
             variant="ghost"
             className="ml-auto font-normal text-xs hover:text-rose-600"
-            onClick={() => {
-              onDelete(table.getFilteredSelectedRowModel().rows)
+            onClick={async () => {
+              const isOK = await confirm()
+              if (isOK) {
+                onDelete(table.getFilteredSelectedRowModel().rows)
+                table.resetRowSelection()
+              }
             }}
           >
             <Trash className="size-4 mr-2" />
@@ -165,6 +174,7 @@ export default function DataTable<TData, TValue>({
           <ChevronsRight />
         </Button>
       </div>
+      <ConfirmDlg />
     </div>
   )
 }

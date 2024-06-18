@@ -6,7 +6,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 
-import { FeatureName } from './constant'
+import { OneData } from './constant'
 import { useNewData, useCreateData } from './useHooks'
 import DataForm, { type FormValues } from './data-form'
 
@@ -25,9 +25,9 @@ export default function NewDataSheet() {
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>New {FeatureName}</SheetTitle>
+          <SheetTitle>New {OneData}</SheetTitle>
           <SheetDescription>
-            Creat new {FeatureName} to track your transactions.
+            Creat new {OneData} to catelog your transactions.
           </SheetDescription>
         </SheetHeader>
         <DataForm

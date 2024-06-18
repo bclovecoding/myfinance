@@ -23,8 +23,8 @@ import {
 
 import useConfirm from '@/hook/use-confirm'
 
-import { OneData } from '@/features/accounts/constant'
-import { useOpenData, useDeleteData } from '@/features/accounts/useHooks'
+import { OneData } from '@/features/categories/constant'
+import { useOpenData, useDeleteData } from '@/features/categories/useHooks'
 
 const Actions = ({ id }: { id: string }) => {
   const [ConfirmDlg, confirm] = useConfirm(
@@ -68,7 +68,7 @@ const Actions = ({ id }: { id: string }) => {
 }
 
 export type RespType = InferResponseType<
-  typeof client.api.accounts.$get,
+  typeof client.api.categories.$get,
   200
 >['data'][0]
 
