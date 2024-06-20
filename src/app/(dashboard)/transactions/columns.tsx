@@ -1,7 +1,7 @@
 'use client'
 import { InferResponseType } from 'hono'
 import { client } from '@/lib/hono'
-
+import { format } from 'date-fns'
 import {
   ArrowUpDown,
   ArrowUp,
@@ -22,9 +22,12 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import useConfirm from '@/hook/use-confirm'
-
+import { formatCurrency } from '@/lib/utils'
 import { OneData } from '@/features/transactions/constant'
 import { useOpenData, useDeleteData } from '@/features/transactions/useHooks'
+import { Badge } from '@/components/ui/badge'
+import AccountColumn from './account-column'
+import CategoryColumn from './category-column'
 
 const Actions = ({ id }: { id: string }) => {
   const [ConfirmDlg, confirm] = useConfirm(
@@ -110,7 +113,74 @@ export const columns: ColumnDef<RespType>[] = [
       )
     },
     cell: ({ row }) => {
-      return (<span>row.</span>)
+      const date = row.getValue('date') as Date
+      return <span>{format(date, 'MMM dd,yyyy')}</span>
+    },
+  },
+  {
+    accessorKey: 'category',
+    header: ({ column }) => {
+      const sortStatus = column.getIsSorted()
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(sortStatus === 'asc')}
+        >
+          Category
+          {sortStatus === 'asc' && <ArrowDown className="size-4 ml-2" />}
+          {sortStatus === 'desc' && <ArrowUp className="size-4 ml-2" />}
+          {!sortStatus && <ArrowUpDown className="size-4 ml-2" />}
+        </Button>
+      )
+    },
+    cell: ({ row }) => (
+      <CategoryColumn
+        id={row.original.id}
+        category={row.original.category}
+        categoryId={row.original.categoryId}
+      />
+    ),
+  },
+  {
+    accessorKey: 'payee',
+    header: ({ column }) => {
+      const sortStatus = column.getIsSorted()
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(sortStatus === 'asc')}
+        >
+          Payee
+          {sortStatus === 'asc' && <ArrowDown className="size-4 ml-2" />}
+          {sortStatus === 'desc' && <ArrowUp className="size-4 ml-2" />}
+          {!sortStatus && <ArrowUpDown className="size-4 ml-2" />}
+        </Button>
+      )
+    },
+  },
+  {
+    accessorKey: 'amount',
+    header: ({ column }) => {
+      const sortStatus = column.getIsSorted()
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(sortStatus === 'asc')}
+        >
+          Amount
+          {sortStatus === 'asc' && <ArrowDown className="size-4 ml-2" />}
+          {sortStatus === 'desc' && <ArrowUp className="size-4 ml-2" />}
+          {!sortStatus && <ArrowUpDown className="size-4 ml-2" />}
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const amount = parseInt(row.getValue('amount'))
+      return (
+        <Badge variant={amount < 0 ? 'destructive' : 'primary'}>
+          {formatCurrency(amount)}
+        </Badge>
+      )
     },
   },
   {
@@ -129,24 +199,12 @@ export const columns: ColumnDef<RespType>[] = [
         </Button>
       )
     },
-  },
-
-  {
-    accessorKey: 'payee',
-    header: ({ column }) => {
-      const sortStatus = column.getIsSorted()
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(sortStatus === 'asc')}
-        >
-          Payee
-          {sortStatus === 'asc' && <ArrowDown className="size-4 ml-2" />}
-          {sortStatus === 'desc' && <ArrowUp className="size-4 ml-2" />}
-          {!sortStatus && <ArrowUpDown className="size-4 ml-2" />}
-        </Button>
-      )
-    },
+    cell: ({ row }) => (
+      <AccountColumn
+        account={row.original.account}
+        accountId={row.original.accountId}
+      />
+    ),
   },
   {
     id: 'actions',

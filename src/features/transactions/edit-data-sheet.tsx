@@ -45,12 +45,11 @@ export default function EditDataSheet() {
     categoryMutation.isPending
 
   const onSubmit = (values: ApiFormValues) => {
-    console.log(values)
-    // editMutaion.mutate(values, {
-    //   onSuccess: () => {
-    //     onClose()
-    //   },
-    // })
+    editMutaion.mutate(values, {
+      onSuccess: () => {
+        onClose()
+      },
+    })
   }
   const onDelete = async () => {
     const isOk = await confirm()
@@ -62,13 +61,23 @@ export default function EditDataSheet() {
       })
     }
   }
-  // const defaultValues = dataQuery.data
-  //   ? {
-  //       name: dataQuery.data.name,
-  //     }
-  //   : {
-  //       name: '',
-  //     }
+  const defaultValues: FormValues = dataQuery.data
+    ? {
+        date: new Date(dataQuery.data.date),
+        accountId: dataQuery.data.accountId,
+        amount: dataQuery.data.amount.toString(),
+        payee: dataQuery.data.payee,
+        categoryId: dataQuery.data.categoryId,
+        notes: dataQuery.data.notes,
+      }
+    : {
+        date: new Date(),
+        accountId: '',
+        amount: '0',
+        payee: '',
+        categoryId: undefined,
+        notes: undefined,
+      }
 
   return (
     <>
@@ -89,7 +98,8 @@ export default function EditDataSheet() {
               onCreateCategory={onCreateCategory}
               accountOptions={accountOptions}
               onCreateAccount={onCreateAccount}
-              defaultvalues={undefined}
+              defaultValues={defaultValues}
+              onDelete={onDelete}
             />
           )}
         </SheetContent>

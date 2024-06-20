@@ -5,7 +5,6 @@ import { create } from 'zustand'
 import { toast } from 'sonner'
 
 import { FeatureName, OneData } from './constant'
-import { NewDataState, OpenDataState } from '../types'
 
 export const useGetDataList = () => {
   const query = useQuery({

@@ -1,10 +1,10 @@
-export type NewDataState = {
+type NewDataState = {
   isOpen: boolean
   onOpen: () => void
   onClose: () => void
 }
 
-export type OpenDataState = {
+type OpenDataState = {
   id?: string
   isOpen: boolean
   onOpen: (id: string) => void

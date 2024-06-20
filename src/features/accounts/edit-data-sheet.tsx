@@ -27,7 +27,6 @@ export default function EditDataSheet() {
   const isPending = editMutaion.isPending || delMutaion.isPending
 
   const onSubmit = (values: FormValues) => {
-    // console.log(values)
     editMutaion.mutate(values, {
       onSuccess: () => {
         onClose()

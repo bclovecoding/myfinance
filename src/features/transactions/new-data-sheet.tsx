@@ -8,7 +8,7 @@ import {
 
 import { OneData } from './constant'
 import { useNewData, useCreateData } from './useHooks'
-import DataForm, { type FormValues, ApiFormValues } from './data-form'
+import DataForm, { type FormValues, type ApiFormValues } from './data-form'
 
 import OptionsUtils from '@/features/options'
 import Loader from '@/components/loader'

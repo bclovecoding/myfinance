@@ -5,6 +5,7 @@ import { clerkMiddleware } from '@hono/clerk-auth'
 
 export const runtime = 'edge'
 
+import summary from './summary'
 import accounts from './accounts'
 import categories from './categories'
 import transactions from './transactions'
@@ -28,9 +29,10 @@ const app = new Hono().basePath('/api')
 app.use('*', clerkMiddleware(), userIdMiddleware)
 
 export const routers = app
+  .route('/summary', summary)
+  .route('/transactions', transactions)
   .route('/accounts', accounts)
   .route('/categories', categories)
-  .route('/transactions', transactions)
 
 export const GET = handle(app)
 export const POST = handle(app)

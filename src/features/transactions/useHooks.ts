@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 import { useSearchParams } from 'next/navigation'
 
 import { FeatureName, OneData } from './constant'
-import { NewDataState, OpenDataState } from '../types'
+import { convertAmountFromMiliunits } from '@/lib/utils'
 
 export const useGetDataList = () => {
   const params = useSearchParams()
@@ -28,7 +28,11 @@ export const useGetDataList = () => {
         throw new Error(`Fail to fetch ${FeatureName}`)
       }
       const { data } = await resp.json()
-      return data
+
+      return data.map((trans) => ({
+        ...trans,
+        amount: convertAmountFromMiliunits(trans.amount),
+      }))
     },
   })
 
@@ -47,7 +51,7 @@ export const useGetData = (id?: string) => {
         throw new Error(`Fail to fetch ${OneData}`)
       }
       const { data } = await resp.json()
-      return data
+      return { ...data, amount: convertAmountFromMiliunits(data.amount) }
     },
   })
 

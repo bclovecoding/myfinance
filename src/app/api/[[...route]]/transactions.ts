@@ -13,7 +13,7 @@ import {
   categoriesTable,
 } from '@/db/schema'
 
-import { idParamValidator } from './utility'
+import { idParamValidator, queryValidator } from './utility'
 
 const selectColumns = {
   id: transactionsTable.id,
@@ -33,51 +33,39 @@ const jsonDataValidator = zValidator(
 )
 
 const app = new Hono()
-  .get(
-    '/',
-    zValidator(
-      'query',
-      z.object({
-        from: z.string().optional(),
-        to: z.string().optional(),
-        accountId: z.string().optional(),
-      })
-    ),
-    async (c) => {
-      const userId = c.get('clerkAuth')?.userId!
-      const { from, to, accountId } = c.req.valid('query')
-      const defaultTo = new Date()
-      const defaultFrom = subDays(defaultTo, 30)
-      const startDate = from
-        ? parse(from, 'yyyy-MM-dd', defaultFrom)
-        : defaultFrom
+  .get('/', queryValidator, async (c) => {
+    const userId = c.get('clerkAuth')?.userId!
+    const { from, to, accountId } = c.req.valid('query')
+    const defaultTo = new Date()
+    const defaultFrom = subDays(defaultTo, 30)
+    const startDate = from
+      ? parse(from, 'yyyy-MM-dd', defaultFrom)
+      : defaultFrom
+    const endDate = to ? parse(to, 'yyyy-MM-dd', defaultTo) : defaultTo
 
-      const endDate = to ? parse(to, 'yyyy-MM-dd', defaultTo) : defaultTo
+    const data = await db
+      .select(selectColumns)
+      .from(transactionsTable)
+      .innerJoin(
+        accountsTable,
+        eq(transactionsTable.accountId, accountsTable.id)
+      )
+      .leftJoin(
+        categoriesTable,
+        eq(transactionsTable.categoryId, categoriesTable.id)
+      )
+      .where(
+        and(
+          accountId ? eq(transactionsTable.accountId, accountId) : undefined,
+          eq(accountsTable.userId, userId),
+          gte(transactionsTable.date, startDate),
+          lte(transactionsTable.date, endDate)
+        )
+      )
+      .orderBy(desc(transactionsTable.date))
 
-      const data = await db
-        .select(selectColumns)
-        .from(transactionsTable)
-        .innerJoin(
-          accountsTable,
-          eq(transactionsTable.accountId, accountsTable.id)
-        )
-        .leftJoin(
-          categoriesTable,
-          eq(transactionsTable.categoryId, categoriesTable.id)
-        )
-        .where(
-          and(
-            accountId ? eq(transactionsTable.accountId, accountId) : undefined,
-            eq(accountsTable.userId, userId),
-            gte(transactionsTable.date, startDate),
-            lte(transactionsTable.date, endDate)
-          )
-        )
-        .orderBy(desc(transactionsTable.date))
-
-      return c.json({ data })
-    }
-  )
+    return c.json({ data })
+  })
   .get('/:id', idParamValidator, async (c) => {
     const userId = c.get('clerkAuth')?.userId!
     const { id } = c.req.valid('param')
@@ -200,7 +188,7 @@ const app = new Hono()
           sql`(select id from ${transactionsToUpdate})`
         )
       )
-      .returning(selectColumns)
+      .returning()
     if (!data) {
       return c.json({ error: 'Not found' }, 404)
     }
