@@ -126,6 +126,7 @@ export const useEditData = (id?: string) => {
       toast.success(`${OneData}  updated`)
       queryClient.invalidateQueries({ queryKey: [OneData, { id }] })
       queryClient.invalidateQueries({ queryKey: [FeatureName] })
+      queryClient.invalidateQueries({ queryKey: ['transactions'] })
       //TODO: Invalidate summary and transactions
     },
     onError: () => {
@@ -152,6 +153,7 @@ export const useDeleteData = (id?: string) => {
       toast.success(`${OneData}  deleted`)
       queryClient.invalidateQueries({ queryKey: [OneData, { id }] })
       queryClient.invalidateQueries({ queryKey: [FeatureName] })
+      queryClient.invalidateQueries({ queryKey: ['transactions'] })
       //TODO: Invalidate summary and transactions
     },
     onError: () => {

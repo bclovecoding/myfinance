@@ -7,6 +7,7 @@ export const runtime = 'edge'
 
 import accounts from './accounts'
 import categories from './categories'
+import transactions from './transactions'
 
 export const userIdMiddleware = createMiddleware(async (c, next) => {
   const ca = c.get('clerkAuth')
@@ -28,7 +29,8 @@ app.use('*', clerkMiddleware(), userIdMiddleware)
 
 export const routers = app
   .route('/accounts', accounts)
-  .route('categories', categories)
+  .route('/categories', categories)
+  .route('/transactions', transactions)
 
 export const GET = handle(app)
 export const POST = handle(app)

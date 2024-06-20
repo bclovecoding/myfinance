@@ -1,4 +1,3 @@
-import { Loader2 } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
@@ -12,6 +11,7 @@ import useConfirm from '@/hook/use-confirm'
 import { OneData } from './constant'
 import { useOpenData, useGetData, useEditData, useDeleteData } from './useHooks'
 import DataForm, { type FormValues } from './data-form'
+import Loader from '@/components/loader'
 
 export default function EditDataSheet() {
   const [ConfirmDlg, confirm] = useConfirm(
@@ -62,9 +62,7 @@ export default function EditDataSheet() {
             <SheetDescription>Edit existing {OneData}</SheetDescription>
           </SheetHeader>
           {isLoading ? (
-            <div className="absolute inset-0 flex-center">
-              <Loader2 className="size-8 text-muted-foreground animate-spin" />
-            </div>
+            <Loader />
           ) : (
             <DataForm
               id={dataQuery.data?.id}

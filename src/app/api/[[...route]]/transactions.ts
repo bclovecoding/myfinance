@@ -27,9 +27,6 @@ const selectColumns = {
   notes: transactionsTable.notes,
 }
 
-// const findByIdWhereClause = (userId: string, id: string) =>
-//   and(eq(transactionsTable.userId, userId), eq(transactionsTable.id, id))
-
 const jsonDataValidator = zValidator(
   'json',
   InsertTransactionSchema.omit({ id: true })
@@ -89,7 +86,7 @@ const app = new Hono()
     }
 
     const [data] = await db
-      .select()
+      .select(selectColumns)
       .from(transactionsTable)
       .innerJoin(
         accountsTable,

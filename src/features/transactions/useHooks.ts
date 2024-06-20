@@ -4,14 +4,26 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { create } from 'zustand'
 import { toast } from 'sonner'
 
+import { useSearchParams } from 'next/navigation'
+
 import { FeatureName, OneData } from './constant'
 import { NewDataState, OpenDataState } from '../types'
 
 export const useGetDataList = () => {
+  const params = useSearchParams()
+  const from = params.get('from') || ''
+  const to = params.get('to') || ''
+  const accountId = params.get('accountId') || ''
   const query = useQuery({
     queryKey: [FeatureName],
     queryFn: async () => {
-      const resp = await client.api[FeatureName].$get()
+      const resp = await client.api[FeatureName].$get({
+        query: {
+          from,
+          to,
+          accountId,
+        },
+      })
       if (!resp.ok) {
         throw new Error(`Fail to fetch ${FeatureName}`)
       }
@@ -55,8 +67,10 @@ export const useOpenData = create<OpenDataState>((set) => ({
   onOpen: (id: string) => set({ id, isOpen: true }),
 }))
 
-type CreateRespType = InferResponseType<typeof client.api.accounts.$post>
-type CreateReqType = InferRequestType<typeof client.api.accounts.$post>['json']
+type CreateRespType = InferResponseType<typeof client.api.transactions.$post>
+type CreateReqType = InferRequestType<
+  typeof client.api.transactions.$post
+>['json']
 
 export const useCreateData = () => {
   const queryClient = useQueryClient()
@@ -77,10 +91,10 @@ export const useCreateData = () => {
 }
 
 type BulkDeleteRespType = InferResponseType<
-  (typeof client.api.accounts)['bulk-delete']['$post']
+  (typeof client.api.transactions)['bulk-delete']['$post']
 >
 type BulkDeleteReqType = InferRequestType<
-  (typeof client.api.accounts)['bulk-delete']['$post']
+  (typeof client.api.transactions)['bulk-delete']['$post']
 >['json']
 
 export const useBulkDelete = () => {
@@ -104,10 +118,10 @@ export const useBulkDelete = () => {
 }
 
 type EditRespType = InferResponseType<
-  (typeof client.api.accounts)[':id']['$patch']
+  (typeof client.api.transactions)[':id']['$patch']
 >
 type EditReqType = InferRequestType<
-  (typeof client.api.accounts)[':id']['$patch']
+  (typeof client.api.transactions)[':id']['$patch']
 >['json']
 
 export const useEditData = (id?: string) => {
@@ -124,8 +138,7 @@ export const useEditData = (id?: string) => {
       toast.success(`${OneData}  updated`)
       queryClient.invalidateQueries({ queryKey: [OneData, { id }] })
       queryClient.invalidateQueries({ queryKey: [FeatureName] })
-      queryClient.invalidateQueries({ queryKey: ['transactions'] })
-      //TODO: Invalidate summary and transactions
+      //TODO: Invalidate summary
     },
     onError: () => {
       toast.error(`Failed to update ${OneData}`)
@@ -135,7 +148,7 @@ export const useEditData = (id?: string) => {
 }
 
 type DeleteRespType = InferResponseType<
-  (typeof client.api.accounts)[':id']['$delete']
+  (typeof client.api.transactions)[':id']['$delete']
 >
 
 export const useDeleteData = (id?: string) => {
@@ -151,8 +164,7 @@ export const useDeleteData = (id?: string) => {
       toast.success(`${OneData}  deleted`)
       queryClient.invalidateQueries({ queryKey: [OneData, { id }] })
       queryClient.invalidateQueries({ queryKey: [FeatureName] })
-      queryClient.invalidateQueries({ queryKey: ['transactions'] })
-      //TODO: Invalidate summary and transactions
+      //TODO: Invalidate summary
     },
     onError: () => {
       toast.error(`Failed to delete ${OneData}`)

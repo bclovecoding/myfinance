@@ -7,6 +7,6 @@ export type NewDataState = {
 export type OpenDataState = {
   id?: string
   isOpen: boolean
-  onOpen: (id:string) => void
+  onOpen: (id: string) => void
   onClose: () => void
 }

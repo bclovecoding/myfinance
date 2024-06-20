@@ -7,11 +7,13 @@ import {
 } from '@/components/ui/sheet'
 
 import useConfirm from '@/hook/use-confirm'
+import Loader from '@/components/loader'
+
+import OptionsUtils from '@/features/options'
 
 import { OneData } from './constant'
 import { useOpenData, useGetData, useEditData, useDeleteData } from './useHooks'
-import DataForm, { type FormValues } from './data-form'
-import Loader from '@/components/loader'
+import DataForm, { type FormValues, type ApiFormValues } from './data-form'
 
 export default function EditDataSheet() {
   const [ConfirmDlg, confirm] = useConfirm(
@@ -23,15 +25,32 @@ export default function EditDataSheet() {
   const editMutaion = useEditData(id)
   const delMutaion = useDeleteData(id)
 
-  const isLoading = dataQuery.isLoading
-  const isPending = editMutaion.isPending || delMutaion.isPending
+  const {
+    accountQuery,
+    accountMutation,
+    onCreateAccount,
+    accountOptions,
+    categoryQuery,
+    categoryMutation,
+    onCreateCategory,
+    categoryOptions,
+  } = OptionsUtils()
 
-  const onSubmit = (values: FormValues) => {
-    editMutaion.mutate(values, {
-      onSuccess: () => {
-        onClose()
-      },
-    })
+  const isLoading =
+    dataQuery.isLoading || accountQuery.isLoading || categoryQuery.isLoading
+  const isPending =
+    editMutaion.isPending ||
+    delMutaion.isPending ||
+    accountMutation.isPending ||
+    categoryMutation.isPending
+
+  const onSubmit = (values: ApiFormValues) => {
+    console.log(values)
+    // editMutaion.mutate(values, {
+    //   onSuccess: () => {
+    //     onClose()
+    //   },
+    // })
   }
   const onDelete = async () => {
     const isOk = await confirm()
@@ -43,13 +62,13 @@ export default function EditDataSheet() {
       })
     }
   }
-  const defaultValues = dataQuery.data
-    ? {
-        name: dataQuery.data.name,
-      }
-    : {
-        name: '',
-      }
+  // const defaultValues = dataQuery.data
+  //   ? {
+  //       name: dataQuery.data.name,
+  //     }
+  //   : {
+  //       name: '',
+  //     }
 
   return (
     <>
@@ -65,9 +84,12 @@ export default function EditDataSheet() {
             <DataForm
               id={dataQuery.data?.id}
               onSubmit={onSubmit}
-              onDelete={onDelete}
               disabled={isPending}
-              defaultValues={defaultValues}
+              categoryOptions={categoryOptions}
+              onCreateCategory={onCreateCategory}
+              accountOptions={accountOptions}
+              onCreateAccount={onCreateAccount}
+              defaultvalues={undefined}
             />
           )}
         </SheetContent>

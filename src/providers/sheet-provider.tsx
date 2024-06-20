@@ -6,6 +6,9 @@ import EditAccountSheet from '@/features/accounts/edit-data-sheet'
 import NewCategorySheet from '@/features/categories/new-data-sheet'
 import EditCategorySheet from '@/features/categories/edit-data-sheet'
 
+import NewTransactionSheet from '@/features/transactions/new-data-sheet'
+import EditTransactionSheet from '@/features/transactions/edit-data-sheet'
+
 export default function SheetProvider() {
   const isMounted = useMountedState()
   if (!isMounted) return null
@@ -15,6 +18,8 @@ export default function SheetProvider() {
       <EditAccountSheet />
       <NewCategorySheet />
       <EditCategorySheet />
+      <NewTransactionSheet />
+      <EditTransactionSheet />
     </>
   )
 }
