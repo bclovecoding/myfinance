@@ -1,6 +1,6 @@
 import { TriangleAlert } from 'lucide-react'
-import { useOpenData as useOpenCategory } from '@/features/categories/useHooks'
-import { useOpenData as useOpenTransaction } from '@/features/transactions/useHooks'
+import { useOpenData as useOpenCategory } from '@/features/categories/use-hooks'
+import { useOpenData as useOpenTransaction } from '@/features/transactions/use-hooks'
 
 import { cn } from '@/lib/utils'
 

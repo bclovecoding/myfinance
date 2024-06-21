@@ -13,7 +13,7 @@ import {
   useNewData,
   useGetDataList,
   useBulkDelete,
-} from '@/features/transactions/useHooks'
+} from '@/features/transactions/use-hooks'
 
 enum VARIANTS {
   LIST = 'LIST',

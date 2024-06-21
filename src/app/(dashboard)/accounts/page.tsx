@@ -10,7 +10,7 @@ import {
   useNewData,
   useGetDataList,
   useBulkDelete,
-} from '@/features/accounts/useHooks'
+} from '@/features/accounts/use-hooks'
 
 export default function Page() {
   const newData = useNewData()

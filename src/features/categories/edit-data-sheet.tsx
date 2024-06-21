@@ -9,7 +9,12 @@ import {
 import useConfirm from '@/hook/use-confirm'
 
 import { OneData } from './constant'
-import { useOpenData, useGetData, useEditData, useDeleteData } from './useHooks'
+import {
+  useOpenData,
+  useGetData,
+  useEditData,
+  useDeleteData,
+} from './use-hooks'
 import DataForm, { type FormValues } from './data-form'
 import Loader from '@/components/loader'
 

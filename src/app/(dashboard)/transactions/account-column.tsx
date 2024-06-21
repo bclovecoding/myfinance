@@ -1,4 +1,4 @@
-import { useOpenData as useOpenAccount } from '@/features/accounts/useHooks'
+import { useOpenData as useOpenAccount } from '@/features/accounts/use-hooks'
 
 type Props = {
   account: string

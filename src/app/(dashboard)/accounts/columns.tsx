@@ -24,7 +24,7 @@ import {
 import useConfirm from '@/hook/use-confirm'
 
 import { OneData } from '@/features/accounts/constant'
-import { useOpenData, useDeleteData } from '@/features/accounts/useHooks'
+import { useOpenData, useDeleteData } from '@/features/accounts/use-hooks'
 
 const Actions = ({ id }: { id: string }) => {
   const [ConfirmDlg, confirm] = useConfirm(

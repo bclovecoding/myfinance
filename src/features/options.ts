@@ -3,12 +3,12 @@ import { type SelectOption } from '@/components/select'
 import {
   useGetDataList as useGetCategories,
   useCreateData as useCreateCategory,
-} from '@/features/categories/useHooks'
+} from '@/features/categories/use-hooks'
 
 import {
   useGetDataList as useGetAccounts,
   useCreateData as useCreateAccount,
-} from '@/features/accounts/useHooks'
+} from '@/features/accounts/use-hooks'
 
 export default function OptionsUtils() {
   const categoryQuery = useGetCategories()

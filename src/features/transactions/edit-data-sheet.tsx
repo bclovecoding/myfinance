@@ -12,7 +12,12 @@ import Loader from '@/components/loader'
 import OptionsUtils from '@/features/options'
 
 import { OneData } from './constant'
-import { useOpenData, useGetData, useEditData, useDeleteData } from './useHooks'
+import {
+  useOpenData,
+  useGetData,
+  useEditData,
+  useDeleteData,
+} from './use-hooks'
 import DataForm, { type FormValues, type ApiFormValues } from './data-form'
 
 export default function EditDataSheet() {

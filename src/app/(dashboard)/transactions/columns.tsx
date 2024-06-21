@@ -24,7 +24,7 @@ import {
 import useConfirm from '@/hook/use-confirm'
 import { formatCurrency } from '@/lib/utils'
 import { OneData } from '@/features/transactions/constant'
-import { useOpenData, useDeleteData } from '@/features/transactions/useHooks'
+import { useOpenData, useDeleteData } from '@/features/transactions/use-hooks'
 import { Badge } from '@/components/ui/badge'
 import AccountColumn from './account-column'
 import CategoryColumn from './category-column'
@@ -175,7 +175,7 @@ export const columns: ColumnDef<RespType>[] = [
       )
     },
     cell: ({ row }) => {
-      const amount = parseInt(row.getValue('amount'))
+      const amount = parseFloat(row.getValue('amount'))
       return (
         <Badge variant={amount < 0 ? 'destructive' : 'primary'}>
           {formatCurrency(amount)}
