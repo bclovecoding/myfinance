@@ -23,7 +23,6 @@ const selectColumns = {
   categoryId: transactionsTable.categoryId,
   category: categoriesTable.name,
   amount: transactionsTable.amount,
-  payee: transactionsTable.payee,
   notes: transactionsTable.notes,
 }
 

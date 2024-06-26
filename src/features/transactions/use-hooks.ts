@@ -15,7 +15,7 @@ export const useGetDataList = () => {
   const to = params.get('to') || ''
   const accountId = params.get('accountId') || ''
   const query = useQuery({
-    queryKey: [FeatureName],
+    queryKey: [FeatureName, { from, to, accountId }],
     queryFn: async () => {
       const resp = await client.api[FeatureName].$get({
         query: {
@@ -86,6 +86,7 @@ export const useCreateData = () => {
     onSuccess: () => {
       toast.success(`${OneData}  created`)
       queryClient.invalidateQueries({ queryKey: [FeatureName] })
+      queryClient.invalidateQueries({ queryKey: ['summary'] })
     },
     onError: () => {
       toast.error(`Failed to create ${OneData}`)
@@ -113,6 +114,7 @@ export const useBulkDelete = () => {
     onSuccess: () => {
       toast.success(`${FeatureName} deleted`)
       queryClient.invalidateQueries({ queryKey: [FeatureName] })
+      queryClient.invalidateQueries({ queryKey: ['summary'] })
     },
     onError: () => {
       toast.error(`Failed to delete ${FeatureName}`)
@@ -142,7 +144,7 @@ export const useEditData = (id?: string) => {
       toast.success(`${OneData}  updated`)
       queryClient.invalidateQueries({ queryKey: [OneData, { id }] })
       queryClient.invalidateQueries({ queryKey: [FeatureName] })
-      //TODO: Invalidate summary
+      queryClient.invalidateQueries({ queryKey: ['summary'] })
     },
     onError: () => {
       toast.error(`Failed to update ${OneData}`)
@@ -168,7 +170,7 @@ export const useDeleteData = (id?: string) => {
       toast.success(`${OneData}  deleted`)
       queryClient.invalidateQueries({ queryKey: [OneData, { id }] })
       queryClient.invalidateQueries({ queryKey: [FeatureName] })
-      //TODO: Invalidate summary
+      queryClient.invalidateQueries({ queryKey: ['summary'] })
     },
     onError: () => {
       toast.error(`Failed to delete ${OneData}`)

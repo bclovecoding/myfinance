@@ -55,7 +55,6 @@ export const InsertCategorySchema = createInsertSchema(categoriesTable)
 export const transactionsTable = pgTable('transactions', {
   id: varchar('id', { length: 60 }).primaryKey(),
   amount: integer('amount').notNull(),
-  payee: text('payee').notNull(),
   date: timestamp('date', { mode: 'date' }).notNull(),
   notes: text('notes'),
   accountId: varchar('account_id', { length: 60 })

@@ -71,7 +71,6 @@ export default function EditDataSheet() {
         date: new Date(dataQuery.data.date),
         accountId: dataQuery.data.accountId,
         amount: dataQuery.data.amount.toString(),
-        payee: dataQuery.data.payee,
         categoryId: dataQuery.data.categoryId,
         notes: dataQuery.data.notes,
       }
@@ -79,7 +78,6 @@ export default function EditDataSheet() {
         date: new Date(),
         accountId: '',
         amount: '0',
-        payee: '',
         categoryId: undefined,
         notes: undefined,
       }

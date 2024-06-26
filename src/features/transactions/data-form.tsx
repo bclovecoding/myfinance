@@ -26,7 +26,6 @@ const formSchema = z.object({
   date: z.coerce.date(),
   accountId: z.string(),
   categoryId: z.string().nullable().optional(),
-  payee: z.string(),
   amount: z.string(),
   notes: z.string().nullable().optional(),
 })
@@ -135,22 +134,6 @@ export default function DataForm({
                   value={field.value}
                   onChange={field.onChange}
                   disabled={disabled}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="payee"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Payee</FormLabel>
-              <FormControl>
-                <Input
-                  disabled={disabled}
-                  placeholder="Add a payee"
-                  {...field}
                 />
               </FormControl>
             </FormItem>

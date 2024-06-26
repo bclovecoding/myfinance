@@ -3,7 +3,9 @@ import { UserButton, ClerkLoaded, ClerkLoading } from '@clerk/nextjs'
 
 import Logo from '@/components/logo'
 import Loader from '@/components/loader'
+import Filters from '@/components/filters'
 import MaxWidthWrapper from '@/components/max-width-wrapper'
+
 import Navigation from './navigation'
 import WelcomeMsg from './welcome-msg'
 
@@ -35,6 +37,7 @@ export default function Header() {
           </ClerkLoading>
         </div>
         <WelcomeMsg />
+        <Filters />
       </MaxWidthWrapper>
     </header>
   )

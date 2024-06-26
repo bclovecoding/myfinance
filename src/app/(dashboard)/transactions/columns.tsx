@@ -114,7 +114,7 @@ export const columns: ColumnDef<RespType>[] = [
     },
     cell: ({ row }) => {
       const date = row.getValue('date') as Date
-      return <span>{format(date, 'MMM dd,yyyy')}</span>
+      return <span>{format(date, 'yyyy-MM-dd')}</span>
     },
   },
   {
@@ -140,23 +140,6 @@ export const columns: ColumnDef<RespType>[] = [
         categoryId={row.original.categoryId}
       />
     ),
-  },
-  {
-    accessorKey: 'payee',
-    header: ({ column }) => {
-      const sortStatus = column.getIsSorted()
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(sortStatus === 'asc')}
-        >
-          Payee
-          {sortStatus === 'asc' && <ArrowDown className="size-4 ml-2" />}
-          {sortStatus === 'desc' && <ArrowUp className="size-4 ml-2" />}
-          {!sortStatus && <ArrowUpDown className="size-4 ml-2" />}
-        </Button>
-      )
-    },
   },
   {
     accessorKey: 'amount',

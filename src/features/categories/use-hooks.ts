@@ -126,7 +126,7 @@ export const useEditData = (id?: string) => {
       queryClient.invalidateQueries({ queryKey: [OneData, { id }] })
       queryClient.invalidateQueries({ queryKey: [FeatureName] })
       queryClient.invalidateQueries({ queryKey: ['transactions'] })
-      //TODO: Invalidate summary and transactions
+      queryClient.invalidateQueries({ queryKey: ['summary'] })
     },
     onError: () => {
       toast.error(`Failed to update ${OneData}`)
@@ -153,7 +153,7 @@ export const useDeleteData = (id?: string) => {
       queryClient.invalidateQueries({ queryKey: [OneData, { id }] })
       queryClient.invalidateQueries({ queryKey: [FeatureName] })
       queryClient.invalidateQueries({ queryKey: ['transactions'] })
-      //TODO: Invalidate summary and transactions
+      queryClient.invalidateQueries({ queryKey: ['summary'] })
     },
     onError: () => {
       toast.error(`Failed to delete ${OneData}`)

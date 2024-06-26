@@ -1,0 +1,26 @@
+import {
+  PolarAngleAxis,
+  PolarGrid,
+  PolarRadiusAxis,
+  Radar,
+  RadarChart,
+} from 'recharts'
+import ResponsiveContainer from './responsive-container'
+
+export default function RadarVariant({ data }: SpendingChartProps) {
+  return (
+    <ResponsiveContainer>
+      <RadarChart data={data} cx="50%" cy="50%" outerRadius="60%">
+        <PolarGrid />
+        <PolarAngleAxis style={{ fontSize: '12px' }} dataKey="name" />
+        <PolarRadiusAxis style={{ fontSize: '12px' }} />
+        <Radar
+          dataKey="value"
+          stroke="#3b82f6"
+          fill="#3b82f6"
+          fillOpacity={0.6}
+        />
+      </RadarChart>
+    </ResponsiveContainer>
+  )
+}
