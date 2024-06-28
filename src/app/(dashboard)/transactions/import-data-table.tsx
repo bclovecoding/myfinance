@@ -10,7 +10,6 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -22,23 +21,21 @@ const options = ['amount', 'date', 'category', 'notes']
 
 type TableHeadSelectProps = {
   columnName: string
-  columnIndex: number
   selectedColumns: SelectedColumnsState
-  onChange: (columnIndex: number, value: string | null) => void
+  onChange: (column: string, value: string) => void
 }
 
 function TableHeadSelect({
-  columnIndex,
   columnName,
   selectedColumns,
   onChange,
 }: TableHeadSelectProps) {
-  const currentSelection = selectedColumns[`column_${columnIndex}`]
+  const currentSelection = selectedColumns[columnName]
 
   return (
     <Select
-      value={currentSelection || ''}
-      onValueChange={(value) => onChange(columnIndex, value)}
+      value={currentSelection || 'skip'}
+      onValueChange={(value) => onChange(columnName, value)}
     >
       <SelectTrigger
         className={cn(
@@ -53,7 +50,7 @@ function TableHeadSelect({
         {options.map((option, idx) => {
           const disabled =
             Object.values(selectedColumns).includes(option) &&
-            selectedColumns[`column_${columnIndex}`] !== option
+            selectedColumns[columnName] !== option
           return (
             <SelectItem
               key={idx}
@@ -73,7 +70,7 @@ function TableHeadSelect({
 type Props = {
   importResult: ImportResult
   selectedColumns: SelectedColumnsState
-  onTableHeadSelectChange: (columnIndex: number, value: string | null) => void
+  onTableHeadSelectChange: (columnName: string, value: string) => void
 }
 
 export default function ImportDataTable({
@@ -81,20 +78,15 @@ export default function ImportDataTable({
   selectedColumns,
   onTableHeadSelectChange,
 }: Props) {
-  const excelDateToJSDate = (date: number) => {
-    return new Date(Math.round((date - 25569) * 864e5))
-  }
   return (
     <div className="rounded-md border overflow-hidden">
       <Table>
-        <TableCaption>Sheet {importResult.sheetName} Content</TableCaption>
         <TableHeader>
           <TableRow>
             {importResult.keys.map((title, idx) => (
               <TableHead key={idx}>
                 <TableHeadSelect
                   columnName={title}
-                  columnIndex={idx}
                   selectedColumns={selectedColumns}
                   onChange={onTableHeadSelectChange}
                 />

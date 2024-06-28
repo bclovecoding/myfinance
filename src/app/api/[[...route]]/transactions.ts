@@ -15,6 +15,48 @@ import {
 
 import { idParamValidator, queryValidator } from './utility'
 
+const getCategoryIdsByNames = async (userId: string, categories: string[]) => {
+  const data = await db
+    .select({ id: categoriesTable.id, category: categoriesTable.name })
+    .from(categoriesTable)
+    .where(
+      and(
+        eq(categoriesTable.userId, userId),
+        inArray(categoriesTable.name, categories)
+      )
+    )
+
+  const existsCategories = (data ?? []).map((c) => c.category)
+
+  const categoriesToCreate = categories.filter(
+    (c) => !existsCategories.includes(c)
+  )
+
+  if (categoriesToCreate && categoriesToCreate.length) {
+    const createdCategories = await db
+      .insert(categoriesTable)
+      .values(
+        categoriesToCreate.map((c) => ({
+          id: createId(),
+          userId,
+          name: c,
+        }))
+      )
+      .returning({ id: categoriesTable.id, category: categoriesTable.name })
+    return [...data, ...createdCategories]
+  } else {
+    return data
+  }
+}
+
+const uploadTranSchema = z.object({
+  date: z.coerce.date(),
+  accountId: z.string(),
+  category: z.string().nullable().optional(),
+  amount: z.number(),
+  notes: z.string().nullable().optional(),
+})
+
 const selectColumns = {
   id: transactionsTable.id,
   date: transactionsTable.date,
@@ -151,6 +193,45 @@ const app = new Hono()
             transactionsTable.id,
             sql`(select id from ${transactionsToDelete})`
           )
+        )
+        .returning({ id: transactionsTable.id })
+      return c.json({ data })
+    }
+  )
+  .post(
+    '/bulk-create',
+    zValidator('json', z.array(uploadTranSchema)),
+    async (c) => {
+      const userId = c.get('clerkAuth')?.userId!
+      const values = c.req.valid('json')
+
+      const allCategories: string[] = values
+        .filter((c) => !!c.category)
+        .map((v) => v.category!)
+
+      const cats = await getCategoryIdsByNames(userId, allCategories)
+
+      const bulkValues = await Promise.all(
+        values.map(async (v) => {
+          const { category, ...rest } = v
+          const categoryId = category
+            ? cats.find((c) => c.category === category)?.id
+            : null
+
+          return {
+            ...rest,
+            categoryId,
+          }
+        })
+      )
+
+      const data = await db
+        .insert(transactionsTable)
+        .values(
+          bulkValues.map((value) => ({
+            id: createId(),
+            ...value,
+          }))
         )
         .returning({ id: transactionsTable.id })
       return c.json({ data })

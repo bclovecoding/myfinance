@@ -33,5 +33,5 @@ type ImportResult = {
 }
 
 interface SelectedColumnsState {
-  [key: string]: string | null
+  [key: string]: string
 }

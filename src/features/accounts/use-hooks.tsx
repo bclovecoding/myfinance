@@ -1,10 +1,21 @@
+import { useState, useRef } from 'react'
 import { InferRequestType, InferResponseType } from 'hono'
 import { client } from '@/lib/hono'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { create } from 'zustand'
 import { toast } from 'sonner'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 
 import { FeatureName, OneData } from './constant'
+import { Select } from '@/components/select'
 
 export const useGetDataList = () => {
   const query = useQuery({
@@ -158,4 +169,77 @@ export const useDeleteData = (id?: string) => {
     },
   })
   return mutation
+}
+
+export const useSelectAccount = (): [
+  () => JSX.Element,
+  () => Promise<unknown>
+] => {
+  const [promise, setPromise] = useState<{
+    resolve: (value: string | undefined) => void
+  } | null>(null)
+
+  const selectValue = useRef<string>()
+  const accountQuery = useGetDataList()
+  const accountMutation = useCreateData()
+
+  const onCreateAccount = (name: string) => accountMutation.mutate({ name })
+  const accountOptions = (accountQuery.data ?? []).map((account) => ({
+    label: account.name,
+    value: account.id,
+  }))
+
+  const disabled = accountQuery.isLoading || accountMutation.isPending
+
+  const confirm = () =>
+    new Promise((resolve, reject) => {
+      setPromise({ resolve })
+    })
+
+  const handleClose = () => {
+    setPromise(null)
+  }
+
+  const handleConfirm = () => {
+    promise?.resolve(selectValue.current)
+    handleClose()
+  }
+
+  const handleCancel = () => {
+    promise?.resolve(undefined)
+    handleClose()
+  }
+
+  const ConfirmationDialog = () => {
+    return (
+      <Dialog open={promise !== null}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Select account</DialogTitle>
+            <DialogDescription>
+              Please select an account to continue.
+            </DialogDescription>
+          </DialogHeader>
+          <Select
+            options={accountOptions}
+            onCreate={onCreateAccount}
+            placeholder="Select an account"
+            value={selectValue.current}
+            onChange={(value) => (selectValue.current = value)}
+            disabled={disabled}
+          />
+          <DialogFooter>
+            <Button onClick={handleCancel} variant="outline">
+              Cancel
+            </Button>
+            <Button onClick={handleConfirm} variant="outline">
+              Yes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
+  return [ConfirmationDialog, confirm]
 }

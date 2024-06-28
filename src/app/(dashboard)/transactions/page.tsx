@@ -1,20 +1,32 @@
 'use client'
 import { useState, useRef } from 'react'
+
 import { Plus, Upload } from 'lucide-react'
 import * as XLSX from 'xlsx'
 
+import { InferRequestType } from 'hono'
+import { client } from '@/lib/hono'
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 import PageSkeleton from '@/components/page-skeleton'
 import DataTable from '@/components/data-table'
+
 import { columns } from './columns'
 import {
   useNewData,
   useGetDataList,
   useBulkDelete,
+  useBulkCreateData,
 } from '@/features/transactions/use-hooks'
+import { useSelectAccount } from '@/features/accounts/use-hooks'
 import ImportCard from './import-card'
+
+type UploadTranType = InferRequestType<
+  (typeof client.api.transactions)['bulk-create']['$post']
+>['json'][0]
 
 enum VARIANTS {
   LIST = 'LIST',
@@ -33,13 +45,16 @@ export default function Page() {
   const newData = useNewData()
   const listQuery = useGetDataList()
   const bulkDeletemutaion = useBulkDelete()
+  const bulkCreatemutaion = useBulkCreateData()
+
+  const [SelectAccountDlg, selectAccount] = useSelectAccount()
 
   const [importResult, setImportResult] = useState<ImportResult>(initialResult)
 
   if (listQuery.isLoading) {
     return <PageSkeleton title="Transactions History" />
   }
-  const isDisabled = bulkDeletemutaion.isPending
+  const isDisabled = bulkDeletemutaion.isPending || bulkCreatemutaion.isPending
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -71,9 +86,34 @@ export default function Page() {
     setVariant(VARIANTS.LIST)
   }
 
+  const onSubmitImport = async (values: UploadTranType[]) => {
+    const accountId = await selectAccount()
+    if (!accountId) {
+      toast.error('Please select an account to continue.')
+    }
+
+    const data: UploadTranType[] = values.map((v) => ({
+      ...v,
+      accountId: accountId as string,
+    }))
+
+    bulkCreatemutaion.mutate(data, {
+      onSuccess: () => {
+        onCancelImport()
+      },
+    })
+  }
+
   if (variant === VARIANTS.IMPORT) {
     return (
-      <ImportCard importResult={importResult} onCancelImport={onCancelImport} />
+      <>
+        <SelectAccountDlg />
+        <ImportCard
+          importResult={importResult}
+          onCancelImport={onCancelImport}
+          onSubmit={onSubmitImport}
+        />
+      </>
     )
   }
 

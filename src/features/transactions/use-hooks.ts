@@ -95,6 +95,34 @@ export const useCreateData = () => {
   return mutation
 }
 
+type BulkCreateRespType = InferResponseType<
+  (typeof client.api.transactions)['bulk-create']['$post']
+>
+type BulkCreateReqType = InferRequestType<
+  (typeof client.api.transactions)['bulk-create']['$post']
+>['json']
+
+export const useBulkCreateData = () => {
+  const queryClient = useQueryClient()
+  const mutation = useMutation<BulkCreateRespType, Error, BulkCreateReqType>({
+    mutationFn: async (json) => {
+      const resp = await client.api[FeatureName]['bulk-create']['$post']({
+        json,
+      })
+      return await resp.json()
+    },
+    onSuccess: () => {
+      toast.success(`${FeatureName} created`)
+      queryClient.invalidateQueries({ queryKey: [FeatureName] })
+      queryClient.invalidateQueries({ queryKey: ['summary'] })
+    },
+    onError: () => {
+      toast.error(`Failed to create ${FeatureName}`)
+    },
+  })
+  return mutation
+}
+
 type BulkDeleteRespType = InferResponseType<
   (typeof client.api.transactions)['bulk-delete']['$post']
 >
