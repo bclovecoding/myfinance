@@ -197,6 +197,7 @@ export const useSelectAccount = (): [
     })
 
   const handleClose = () => {
+    selectValue.current = undefined
     setPromise(null)
   }
 
@@ -228,7 +229,7 @@ export const useSelectAccount = (): [
             onChange={(value) => (selectValue.current = value)}
             disabled={disabled}
           />
-          <DialogFooter>
+          <DialogFooter className="gap-2">
             <Button onClick={handleCancel} variant="outline">
               Cancel
             </Button>

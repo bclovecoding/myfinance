@@ -52,7 +52,7 @@ const useConfirm = (
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{message}</DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <DialogFooter className="gap-2">
             <Button onClick={handleCancel} variant="outline">
               Cancel
             </Button>
