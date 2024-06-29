@@ -27,10 +27,6 @@ const routers = [
     href: '/categories',
     label: 'Categories',
   },
-  {
-    href: '/settings',
-    label: 'Settings',
-  },
 ]
 type RouteButtonProps = { href: string; label: string; isActive: boolean }
 function RouteButton({ href, label, isActive }: RouteButtonProps) {
