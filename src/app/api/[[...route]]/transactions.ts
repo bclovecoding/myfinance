@@ -209,7 +209,9 @@ const app = new Hono()
         .filter((c) => !!c.category)
         .map((v) => v.category!)
 
-      const cats = await getCategoryIdsByNames(userId, allCategories)
+      const categoriesToLoad = [...new Set(allCategories)]
+
+      const cats = await getCategoryIdsByNames(userId, categoriesToLoad)
 
       const bulkValues = await Promise.all(
         values.map(async (v) => {
