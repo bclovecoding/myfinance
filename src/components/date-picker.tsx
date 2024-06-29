@@ -10,7 +10,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 
-type SelectSingleEventHandler = (day: Date) => void
+type SelectSingleEventHandler = (date: Date | undefined) => void
 
 type Props = {
   value?: Date
@@ -20,7 +20,7 @@ type Props = {
 
 export default function DatePicker({ value, onChange, disabled }: Props) {
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
-  const handleOnSelect: SelectSingleEventHandler = (date: Date) => {
+  const handleOnSelect: SelectSingleEventHandler = (date: Date | undefined) => {
     onChange?.(date)
     setIsPopoverOpen(false)
   }

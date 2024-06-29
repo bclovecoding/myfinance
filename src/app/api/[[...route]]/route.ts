@@ -10,7 +10,7 @@ import accounts from './accounts'
 import categories from './categories'
 import transactions from './transactions'
 
-export const userIdMiddleware = createMiddleware(async (c, next) => {
+const userIdMiddleware = createMiddleware(async (c, next) => {
   const ca = c.get('clerkAuth')
 
   if (!ca || !ca.userId) {
@@ -28,7 +28,7 @@ const app = new Hono().basePath('/api')
 
 app.use('*', clerkMiddleware(), userIdMiddleware)
 
-export const routers = app
+const routers = app
   .route('/summary', summary)
   .route('/transactions', transactions)
   .route('/accounts', accounts)
