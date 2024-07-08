@@ -1,5 +1,10 @@
 import Link from 'next/link'
-import { UserButton, ClerkLoaded, ClerkLoading } from '@clerk/nextjs'
+import {
+  UserButton,
+  ClerkLoaded,
+  ClerkLoading,
+  OrganizationSwitcher,
+} from '@clerk/nextjs'
 
 import Logo from '@/components/logo'
 import Loader from '@/components/loader'
@@ -30,7 +35,10 @@ export default function Header() {
             <Navigation />
           </div>
           <ClerkLoaded>
-            <UserButton />
+            <div className="flex-center gap-2">
+              <OrganizationSwitcher />
+              <UserButton />
+            </div>
           </ClerkLoaded>
           <ClerkLoading>
             <Loader />

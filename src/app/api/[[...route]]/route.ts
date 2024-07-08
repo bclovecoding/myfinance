@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { createMiddleware } from 'hono/factory'
 import { handle } from 'hono/vercel'
-import { clerkMiddleware } from '@hono/clerk-auth'
+import { clerkMiddleware, getAuth } from '@hono/clerk-auth'
 
 export const runtime = 'edge'
 
@@ -11,9 +11,11 @@ import categories from './categories'
 import transactions from './transactions'
 
 const userIdMiddleware = createMiddleware(async (c, next) => {
-  const ca = c.get('clerkAuth')
+  const auth = getAuth(c)
+  console.log(auth)
 
-  if (!ca || !ca.userId) {
+  // console.log({ auth })
+  if (!auth || !auth.userId || !auth.orgId) {
     return c.json(
       {
         error: 'Unauthorized',
